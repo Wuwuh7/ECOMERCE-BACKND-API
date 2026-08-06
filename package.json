@@ -1,0 +1,28 @@
+{
+  "name": "ecomerce-backnd-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Wuwuh7/ECOMERCE-BACKND-API#readme",
+  "bugs": {
+    "url": "https://github.com/Wuwuh7/ECOMERCE-BACKND-API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wuwuh7/ECOMERCE-BACKND-API.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/adapter-ppg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "prisma": "^7.9.1"
+  }
+}
