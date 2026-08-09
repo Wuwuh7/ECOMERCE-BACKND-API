@@ -1,29 +1,18 @@
 import express from "express";
-import { controlerAddCart,controlerDetailProducts,controlerSearch,controlerAddStock,controlerFilter } from "./controler.mjs";
+import { controlerAddCart,controlerDetailProducts,controlerSearch,controlerAddStock,controlerFilter,controlerDeleteCart } from "./controler.mjs";
 
 const route = express.Router();
 
-route.get("/product/:id", (req,res) => {
-    res.send("detail product kieh")
-});
+route.get("/product/:id",controlerDetailProducts);
 
-route.get("/filter",(req,res) => {
-    res.send("khususon koe")
-});
+route.get("/filter",controlerFilter);
 
-route.post("/cart", (req,res) => {
-    res.send("gletaka keranjang kieh")
-})
+route.post("/cart", controlerAddCart)
 
-route.delete("/cart", (req,res) => {
-    res.send("hapus barang ning cart ya")
-})
+route.delete("/cart", controlerDeleteCart)
 
-route.post("/quantity", (req,res) => {
-    res.send("tek tambah stoke yak")
-});
+route.post("/quantity",controlerAddStock);
 
-route.get("/search", (req,res) => {
-    res.send("kieh sing ko geleti")
-});
+route.get("/search",controlerSearch);
 
+export default route;

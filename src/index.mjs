@@ -1,18 +1,16 @@
 import express from "express";
-import 'dotenv/config'
-import { PrismaClient } from "@prisma/client";
-import { PrismaPostgresAdapter } from "@prisma/adapter-ppg";
+import  route  from "./routes.mjs";
 
 const app = express();
-const port = process.env.PORT;
+const port = 8080;
 app.use(express.json())
-
-app.use("/", (req,res,next) => {
-    res.send("tek check sit ya");
+app.use("/", (req, res, next) => {
     next();
 });
 
+app.use("/", route);
 
-app.listen(port,
+
+app.listen(port, '0.0.0.0', () => {
     console.log("wah guanteng lanjut")
-);
+});
