@@ -20,22 +20,42 @@ export async function detailingProduct(id) {
 }
 
 export async function searchingProducts(data) {
-     const formattedSearch = data.toString()
-    .trim()
-    .split(/\s+/)
-    .map(word => `${word}:*`)
-    .join(' & ');
+    const whereClause = {};
 
-    const searchProcess = await prisma.product.findMany({
-        where: {
-            OR:[
-                {name: {contains:formattedSearch, mode:"insensitive"}},
-                {category: {contains:formattedSearch, mode:"insensitive"}},
-                {size   : {contains:formattedSearch,mode:"insensitive"}},
-                {price  : {contains:formattedSearch,mode:"insensitive"}},
-                {rating : {contains:formattedSearch,mode:"insensitive"}}
-            ]
+    if(data.name && String(data.name).trim() !== "") {
+        whereClause.name = {
+            contains: String(data.name).trim(),
+            mode: "insensitive"
         }
-    });
-    return searchProcess;
+    }
+
+    if(data.category && String(data.category).trim() !== "") {
+        whereClause.name = {
+            contains: String(data.category).trim(),
+            mode: "insensitive"
+        }
+    }
+
+    if(data.price !== undefined && data.price !== null) {
+        const parsedPrice = parseInt(data.price, 10);
+        if(!Number.isNaN(parsedPrice)) {
+            whereClause.price = {
+                equals: parsedPrice,
+            }
+        }
+    }
+
+    if(data.size !== undefined && data.size !== null) {
+        const parsedSize = parseInt(data.size, 10);
+        if(!Number.isNaN(parsedSize)) {
+            whereClause.size = {
+                has: parsedSize,
+            }
+        }
+    }
+
+    return await prisma.product.findMany({
+        where:whereClause
+    })
+   
 }

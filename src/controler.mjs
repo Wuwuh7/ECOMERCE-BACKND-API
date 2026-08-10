@@ -1,8 +1,8 @@
 import { detailingProduct,searchingProducts } from "./service.mjs"
 
 let dataHelper = (query) => {
-        const {name,category,price,size,rating} = query;
-        return {name,category,price,size,rating};
+        const {name,category,price,size} = query;
+        return {name,category,price,size};
 }
 
 export const controlerFilter = async (req,res) => {
@@ -59,10 +59,14 @@ export const controlerAddStock = async (req,res) => {
 }
 
 export const controlerSearch = async (req,res) => {
+    try {
     let dataSearched = dataHelper(req.query)
     const resultSearch = await searchingProducts(dataSearched)
     res.json({
         status:"kieh sing ko golet",
         result:resultSearch
     })
+    } catch (error) {
+     console.log(error)   
+    }
 }
