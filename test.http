@@ -1,3 +1,7 @@
 GET https://fictional-fiesta-wrj7r7gx5vgvc7q-8080.app.github.dev/product/1
 ###
 GET https://fictional-fiesta-wrj7r7gx5vgvc7q-8080.app.github.dev/search?size=40
+###
+GET https://fictional-fiesta-wrj7r7gx5vgvc7q-8080.app.github.dev/auth
+Authorization: Basic YWRtaW46c2VjcmV0MTIz
+
