@@ -1,4 +1,5 @@
 import { detailingProduct,searchingProducts } from "./service.mjs"
+import { createToken } from "./auth.mjs";
 
 let dataHelper = (query) => {
         const {name,category,price,size} = query;
@@ -68,5 +69,18 @@ export const controlerSearch = async (req,res) => {
     })
     } catch (error) {
      console.log(error)   
+    }
+}
+
+export const controlerAuth = async (req,res) => {
+    try {
+        let serialObj = req.body;
+        const resultAuth = await createToken(serialObj)
+        res.json({
+            status:"verifikasi dadi",
+            result:resultAuth
+        })
+    } catch (error) {
+        console.log(error)
     }
 }

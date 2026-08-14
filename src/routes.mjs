@@ -1,7 +1,10 @@
 import express from "express";
-import { controlerAddCart,controlerDetailProducts,controlerSearch,controlerAddStock,controlerFilter,controlerDeleteCart } from "./controler.mjs";
+import { checkAuth } from "./midleware.mjs";
+import { controlerAddCart,controlerDetailProducts,controlerSearch,controlerAddStock,controlerFilter,controlerDeleteCart,controlerAuth } from "./controler.mjs";
 
 const route = express.Router();
+
+route.post("/auth",checkAuth, controlerAuth)
 
 route.get("/product/:id",controlerDetailProducts);
 
