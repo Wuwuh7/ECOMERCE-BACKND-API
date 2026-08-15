@@ -1,23 +1,24 @@
 import 'dotenv/config'
-import jwt, { decode } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import _ from 'lodash';
 
 const keyToken = process.env.JWT_SECRET;
 
-// export async function verifyJWT(token) {
-//     return await new Promise((resolve,reject) => {
-//         jwt.verify(token, keyToken,(err,decode) => {
-//           if(err) {
-//             reject(res.status(401).res.send(err.message))
-//           } else {
-//             resolve(decode)
-//           }
-//         })
-//     })
-// }
+export async function verifyJWT(token) {
+    return await new Promise((resolve,reject) => {
+        return jwt.verify(token, keyToken,(err,decode) => {
+          if(err) {
+            reject(err.message)
+          } else {
+            resolve(decode)
+          }
+        })
+    })
+}
 
 export async function createToken(data) {
-    if(typeof data !== {} ) {
+    console.log(data);
+    if(typeof data !== {}) {
         data = {}
     }
     if(!data.maxAge || typeof data.maxAge !== 'number') {

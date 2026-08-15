@@ -1,5 +1,5 @@
 import { detailingProduct,searchingProducts } from "./service.mjs"
-import { createToken } from "./auth.mjs";
+import { createToken,verifyJWT } from "./auth.mjs";
 
 let dataHelper = (query) => {
         const {name,category,price,size} = query;
@@ -83,4 +83,15 @@ export const controlerAuth = async (req,res) => {
     } catch (error) {
         console.log(error)
     }
+}
+
+
+export const controlerVerifyToken = async (req,res) => {
+    let headerSign = req.headers.authorization;
+    const token = headerSign && headerSign.split(' ')[1]; 
+    const resultVerifyToken = await verifyJWT(token);
+    res.json({
+        status: "suksess lur",
+        result:resultVerifyToken
+    }) 
 }
