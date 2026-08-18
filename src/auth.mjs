@@ -18,21 +18,25 @@ export async function verifyJWT(token) {
 
 export async function createToken(data) {
     console.log(data);
-    if(typeof data !== {}) {
+    if(typeof data !== "object") {
         data = {}
     }
     if(!data.maxAge || typeof data.maxAge !== 'number') {
         data.maxAge = 3600;
     }
+    const rawSource = data.sessionData ? data.sessionData : data;
+    const targetSession = JSON.parse(JSON.stringify(rawSource || {}));
 
-    data.sessionData = _.reduce(data.sessionData || {}, (memo,val,key) => {
+    const payload = _.reduce(targetSession, (memo,val,key) => {
+        console.log(`-> Loop Key: "${key}" | Type Val: ${typeof val} | Val:`, val);
         if(typeof val !== "function" && key !== "password") {
             memo[key] = val;
+             console.log(`2.-> Loop Key: "${key}" | Type Val: ${typeof val} | Val:`, val);
         }
         return memo;
     }, {});
 
-    const token = jwt.sign({data:data.sessionData},keyToken,{
+    const token = jwt.sign({ payload },keyToken,{
         expiresIn: data.maxAge,
         algorithm: 'HS256'
     });

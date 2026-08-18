@@ -1,14 +1,29 @@
 import { userDb } from "./service.mjs";
-import expressBasicAuth from "express-basic-auth";
+import basicAuth from "express-basic-auth";
+
+ const authentication = basicAuth({
+ authorizer: async (email,password,cb) => {
+    try {
+      
+        const user = await userDb(email);
+        console.log(`kieh db ne ${user}`)
+        if(!user || !user.password) {
+            return cb(null,false);
+        }
+        const matchPassword = (password === user.password);
+        return cb(null,Boolean(matchPassword))
+    } catch (error) {
+    console.log(error)  
+    return cb(null, false);      
+    }
+ },   
+ authorizeAsync : true,
+ unauthorizedResponse: {
+    status:"gagal masseh",
+    message: "email or password are not valid"
+ }
+});
 
 export async function checkAuth(req,res,next) {
-    const authentication = expressBasicAuth(req);
-    const { email,password } = userDb;
-
-    if (!authentication.email && authentication.email !== email && !authentication.password && authentication.password !== password) {
-        res.set('WWW-Authenticate', 'Basic realm ="example"');
-        return res.status(401).send('Unauthorized');
-    } else {
-        next();
-    }
+   authentication(req,res,next);
 }
