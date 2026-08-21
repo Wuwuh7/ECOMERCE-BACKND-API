@@ -6,13 +6,25 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
+
+
 export const userDb = async (email) => {
     const user = await prisma.user.findUnique({
         where: {
-            email:email        }
+            email:email
+        }
     })
     return user;
 }
+export const findCartId = async (id) => {
+    await prisma.cart.findUnique({
+        where: {
+            id: Number(id)
+        }
+    })
+}
+
+
 
 export async function detailingProduct(id) {
    try {
