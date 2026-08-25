@@ -35,6 +35,9 @@ model cart_item {
   productId   Int
   product     Product @relation(fields: [productId],references: [id])
   quantity    Int     @default(1)
+  selectedSize Int?
+
+  @@unique([cartId,productId,selectedSize])
 }
 
 model Product {

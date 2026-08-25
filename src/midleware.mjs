@@ -1,6 +1,7 @@
 import { userDb,findCartId } from "./service.mjs";
 import basicAuth from "express-basic-auth";
 import { verifyJWT } from "./auth.mjs";
+import { verify } from "jsonwebtoken";
 
  const authentication = basicAuth({
  authorizer: async (email,password,cb) => {
@@ -29,10 +30,8 @@ export async function checkAuth(req,res,next) {
    authentication(req,res,next);
 }
 
-
-export const ownershipChecker = async (req,res,next) => {
-   try {
-      const token = req.headers.authorization?.split(" ")[1];
+export async function verifyAfterLogin(req,res,next) {
+   const token = req.headers.authorization?.split(" ")[1];
    if (!token) {
             return res.status(401).json({ message: "Token gak ada, lur!" });
         }
@@ -42,7 +41,12 @@ export const ownershipChecker = async (req,res,next) => {
       return res.status(401).json({message:"payload rusak"});
    }
    req.user = validation.payload;
-   
+   next();
+} 
+
+
+export const ownershipChecker = async (req,res,next) => {
+   try {
    const cartId = req.params.cartId;
 
    if(cartId) {

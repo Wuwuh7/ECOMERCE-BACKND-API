@@ -78,3 +78,6 @@ export async function searchingProducts(data) {
     })
    
 }
+
+// export async function addCart(product,user) {
+// }

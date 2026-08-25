@@ -5,3 +5,10 @@ node_modules/
 .claude
 .windsurf
 test.http
+.gemini/
+.cache/
+odeoss/
+.config/
+.npm/
+.vscode/
+.bash_history

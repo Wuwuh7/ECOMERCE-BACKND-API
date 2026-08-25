@@ -1,4 +1,5 @@
-import { detailingProduct,searchingProducts } from "./service.mjs"
+import { z } from "zod";
+import { detailingProduct,searchingProducts,addCart } from "./service.mjs"
 import { createToken,verifyJWT } from "./auth.mjs";
 
 let dataHelper = (query) => {
@@ -29,8 +30,14 @@ console.log(error);
 }
 
 export const controlerAddCart = async (req,res) => {
-    const { items } = req.body;
-    const resultAddCart = await addCart(items);
+    const { userId } = req.user;
+    const cartScema = z.object({
+        productId: z.number().positive(),
+        quantity: z.number().min(1)
+    })
+
+    const validateBody = cartScema.parse(req.body);
+    const resultAddCart = await addCart(validateBody,userId);
     return res.json({
         status: "tambah kieh cart mu",
         result: resultAddCart
