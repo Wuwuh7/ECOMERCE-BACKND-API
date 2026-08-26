@@ -79,5 +79,34 @@ export async function searchingProducts(data) {
    
 }
 
-// export async function addCart(product,user) {
-// }
+export async function addCart(product,user) {
+    return await prisma.$transaction(async (tx) => {
+
+    const cart = await tx.cart.upsert({
+      where: { userId: user.id },
+      update: {}, 
+      create: { userId: user.id }, 
+    });
+
+    const item = await tx.cart_item.upsert({
+      where: {
+        cartId_productId_selectedSize: {
+          cartId: cart.id,
+          productId: product.productId,
+          selectedSize: product.selectedSize,
+        },
+      },
+      update: {
+        quantity: { increment: product.quantity }, 
+      },
+      create: {
+        cartId: cart.id,
+        productId: product.productId,
+        selectedSize: product.selectedSize,
+        quantity: product.quantity, 
+      },
+    });
+
+    return item; 
+  });
+}
