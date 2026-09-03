@@ -1,5 +1,5 @@
 import express from "express";
-import { checkAuth } from "./midleware.mjs";
+import { checkAuth,validationToken,ownershipChecker } from "./midleware.mjs";
 import { controlerAddCart,controlerDetailProducts,controlerSearch,controlerAddStock,controlerFilter,controlerDeleteCart,controlerAuth,controlerVerifyToken } from "./controler.mjs";
 
 const route = express.Router();
@@ -12,11 +12,11 @@ route.get("/product/:id",controlerDetailProducts);
 
 route.get("/filter",controlerFilter);
 
-route.post("/cart", controlerAddCart)
+route.post("/cart", validationToken,controlerAddCart)
 
-route.delete("/cart", controlerDeleteCart)
+route.delete("/cart",validationToken,ownershipChecker, controlerDeleteCart)
 
-route.post("/quantity",controlerAddStock);
+route.post("/quantity",validationToken,ownershipChecker,controlerAddStock);
 
 route.get("/search",controlerSearch);
 

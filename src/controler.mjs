@@ -1,10 +1,16 @@
-import { detailingProduct,searchingProducts } from "./service.mjs"
+import z from "zod"
+import { detailingProduct,searchingProducts,addCart } from "./service.mjs"
 import { createToken,verifyJWT } from "./auth.mjs";
 
 let dataHelper = (query) => {
         const {name,category,price,size} = query;
         return {name,category,price,size};
 }
+
+let validationZod = z.object({
+    productId: z.number(),
+    quantity: z.number().min(1)
+});
 
 export const controlerFilter = async (req,res) => {
     const { category,price,size,rating } = req.query;
@@ -29,8 +35,9 @@ console.log(error);
 }
 
 export const controlerAddCart = async (req,res) => {
-    const { items } = req.body;
-    const resultAddCart = await addCart(items);
+    const { userId } = req.user;
+    const items = validationZod.parse(req.body);
+    const resultAddCart = await addCart(items,userId);
     return res.json({
         status: "tambah kieh cart mu",
         result: resultAddCart

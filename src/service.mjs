@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
 const adapter = new PrismaPg(pool);
@@ -23,6 +24,7 @@ export const findCartId = async (id) => {
         }
     })
 }
+
 
 
 
@@ -77,4 +79,30 @@ export async function searchingProducts(data) {
         where:whereClause
     })
    
+}
+
+export async function addCart(item,user) {
+    return await prisma.$transaction(async (data) => {
+    const cart = await data.cart.upsert({
+        where: {userId:user},
+        update: {},
+        create:{userId:user}
+    });
+    const cartInsert = await data.cart_item.upsert({
+        where:{
+            cartId_productId: {
+            cartId: cart.id,
+            productId: item.productId
+        }},
+        update:{
+            quantity:{increment:item.quantity}
+        },
+        create: {
+            cartId: cart.id,
+            productId:item.productId,
+            quantity: item.quantity
+        }
+    });
+    return cartInsert;
+})
 }

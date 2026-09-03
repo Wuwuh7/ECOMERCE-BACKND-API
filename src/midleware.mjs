@@ -29,10 +29,8 @@ export async function checkAuth(req,res,next) {
    authentication(req,res,next);
 }
 
-
-export const ownershipChecker = async (req,res,next) => {
-   try {
-      const token = req.headers.authorization?.split(" ")[1];
+export const validationToken = async (req,res,next) => {
+   const token = req.headers.authorization?.split(" ")[1];
    if (!token) {
             return res.status(401).json({ message: "Token gak ada, lur!" });
         }
@@ -42,10 +40,16 @@ export const ownershipChecker = async (req,res,next) => {
       return res.status(401).json({message:"payload rusak"});
    }
    req.user = validation.payload;
-   
+   next();
+}
+
+
+export const ownershipChecker = async (req,res,next) => {
+   try {
    const cartId = req.params.cartId;
 
    if(cartId) {
+      const cart = await    findCartId(cartId);
 
       if (!cart) {
                 return res.status(404).json({ message: "Cart gak ditemukan!" });
@@ -54,7 +58,6 @@ export const ownershipChecker = async (req,res,next) => {
       if (cart.userId !== req.user.userId) {
                 return res.status(403).json({ message: "Bukan keranjang punya lu, dilarang ngacak-ngacak!" });
             }
-   findCartId(cartId)
    }
    next();
    } catch(error) {
