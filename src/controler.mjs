@@ -1,5 +1,5 @@
 import z from "zod"
-import { detailingProduct,searchingProducts,addCart } from "./service.mjs"
+import { detailingProduct,searchingProducts,addCart,deletingProduct,addStockCart,filteringData } from "./service.mjs"
 import { createToken,verifyJWT } from "./auth.mjs";
 
 let dataHelper = (query) => {
@@ -13,8 +13,8 @@ let validationZod = z.object({
 });
 
 export const controlerFilter = async (req,res) => {
-    const { category,price,size,rating } = req.query;
-    const resultFilter = await filteringData(category,price,size,rating);
+    const { category,price,size } = req.query;
+    const resultFilter = await filteringData(category,price,size);
     return res.json({
         status : "dadi boss",
         result : resultFilter

@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import { range } from 'lodash';
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -51,7 +52,7 @@ export async function searchingProducts(data) {
     }
 
     if(data.category && String(data.category).trim() !== "") {
-        whereClause.name = {
+        whereClause.category = {
             contains: String(data.category).trim(),
             mode: "insensitive"
         }
@@ -105,4 +106,58 @@ export async function addCart(item,user) {
     });
     return cartInsert;
 })
+}
+
+export async function deletingProduct(id) {
+    return await prisma.cart_item.delete({
+        where: {
+            id: Number(id)
+        }
+    })
+}
+
+export async function addStockCart(id,quantity) {
+    return await prisma.cart_item.update({
+        where: {
+            id: Number(id)
+        },
+        data: {
+            quantity: {increment: Number(quantity)}
+        }
+    })
+}
+
+export async function filteringData(category,price,size) {
+    let where = {};
+    if(category) {
+        where.cateogory = category;
+    }
+    if(price) {
+        let rangePrice = {
+            cheap : 1000000,
+            expensive : 2000000
+        }
+
+        let selectedPrice = () => {
+            return price === "cheap-price" ? Math.floor(Math.random() * rangePrice.cheap): price === "normal-price" < rangePrice.expensive ? Math.floor(Math.random() * (rangePrice.expensive - rangePrice.cheap + 1) + rangePrice.cheap): price === "expensive-price" ? Math.floor(Math.random() * rangePrice.expensive):undefined;
+       }; 
+
+        switch (selectedPrice) {
+            case selectedPrice <= rangePrice.cheap:
+                where.price = {lte:rangePrice.cheap}
+                break;
+            case selectedPrice > rangePrice.cheap && selectedPrice < rangePrice.expensive:
+                where.price = {
+                    lt:rangePrice.expensive,
+                    gt:rangePrice.cheap
+                }
+                break
+            case selectedPrice >= rangePrice.expensive:
+                where.size = {lte:rangePrice.expensive}
+        }
+    }
+    if(size) {
+       return where.size = {hasSome:size}
+    }
+    return await prisma.product.findMany({where})
 }
