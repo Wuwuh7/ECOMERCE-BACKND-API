@@ -1,5 +1,7 @@
+import "express-async-error";
 import express from "express";
 import  route  from "./routes.mjs";
+import { globalErorHandling } from "./midleware.mjs";
 
 
 const app = express();
@@ -10,6 +12,7 @@ app.use("/", (req, res, next) => {
 });
 
 app.use("/", route);
+app.use(globalErorHandling);
 
 
 app.listen(port, '0.0.0.0', () => {

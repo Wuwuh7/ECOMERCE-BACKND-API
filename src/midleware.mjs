@@ -1,4 +1,4 @@
-import { userDb,findCartId } from "./service.mjs";
+import { userDb,findCartId,AppErors } from "./service.mjs";
 import basicAuth from "express-basic-auth";
 import { verifyJWT } from "./auth.mjs";
 
@@ -64,3 +64,25 @@ export const ownershipChecker = async (req,res,next) => {
       console.log(error);
    }
 }
+
+export const globalErorHandling = async (err,req,res,next) => {
+   const statusCode = err.status || 500;
+  const errorType = err.type || "INTERNAL_SERVER_ERROR";
+
+  if (err.code === 'P2002') {
+    throw new AppErors("Data sudah ada gess, ganti yang beda",409,"Conflict")
+  }
+    if (err.code === 'P2025') {
+   throw new AppErors("Datanya gak ketemu gess",404,"Not Found")
+  }
+    if (err.code === 'P2003') {
+   throw new AppErors("Data yang kamu minta/kirim aneh",400,"Bad Request")
+  }
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    error: errorType,
+    message: err.message || "Terjadi kesalahan pada server",
+    details: err.details || null,
+  });
+};

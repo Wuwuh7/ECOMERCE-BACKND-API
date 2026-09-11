@@ -2,13 +2,22 @@ import 'dotenv/config'
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
-import { range } from 'lodash';
+import { globalErorHandling } from "./midleware.mjs";
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+export class AppErors extends Error {
+    constructor(message,status,type,details = null) {
+        super(message);
+        this.status = status;
+        this.type = type;
+        this.details = details;
+        this.operational = true;
+    }
+}
 
 export const userDb = async (email) => {
     const user = await prisma.user.findUnique({
@@ -37,11 +46,14 @@ export async function detailingProduct(id) {
     });
     return detailingProces;
    } catch (error) {
+    globalErorHandling(error)
     console.log(error)
    }
 }
 
 export async function searchingProducts(data) {
+    try {
+        
     const whereClause = {};
 
     if(data.name && String(data.name).trim() !== "") {
@@ -79,11 +91,15 @@ export async function searchingProducts(data) {
     return await prisma.product.findMany({
         where:whereClause
     })
-   
+
+    } catch (error) {
+    globalErorHandling(error)        
+    }
 }
 
 export async function addCart(item,user) {
-    return await prisma.$transaction(async (data) => {
+    try {
+        return await prisma.$transaction(async (data) => {
     const cart = await data.cart.upsert({
         where: {userId:user},
         update: {},
@@ -106,18 +122,26 @@ export async function addCart(item,user) {
     });
     return cartInsert;
 })
+    } catch (error) {
+  globalErorHandling(error)      
+    }
 }
 
 export async function deletingProduct(id) {
-    return await prisma.cart_item.delete({
+    try {
+        return await prisma.cart_item.delete({
         where: {
             id: Number(id)
         }
     })
+    } catch (error) {
+      globalErorHandling(error)  
+    }
 }
 
 export async function addStockCart(id,quantity) {
-    return await prisma.cart_item.update({
+   try {
+     return await prisma.cart_item.update({
         where: {
             id: Number(id)
         },
@@ -125,9 +149,14 @@ export async function addStockCart(id,quantity) {
             quantity: {increment: Number(quantity)}
         }
     })
+   } catch (error) {
+    globalErorHandling(error)
+   }
 }
 
 export async function filteringData(category,price,size) {
+    try {
+        
     let where = {};
     if(category) {
         where.cateogory = category;
@@ -160,4 +189,8 @@ export async function filteringData(category,price,size) {
        return where.size = {hasSome:size}
     }
     return await prisma.product.findMany({where})
+
+    } catch (error) {
+    globalErorHandling(error)        
+    }
 }
