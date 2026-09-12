@@ -14,7 +14,7 @@ route.get("/filter",controlerFilter);
 
 route.post("/cart", validationToken,controlerAddCart)
 
-route.delete("/cart",validationToken,ownershipChecker, controlerDeleteCart)
+route.delete("/cart/:id",validationToken,ownershipChecker, controlerDeleteCart)
 
 route.post("/quantity",validationToken,ownershipChecker,controlerAddStock);
 

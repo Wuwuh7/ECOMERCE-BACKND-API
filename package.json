@@ -19,8 +19,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^6.19.3",
     "@prisma/client": "^7.10.0",
+    "7.10": "^1.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-async-error": "0.0.2",
@@ -31,6 +31,7 @@
     "tsx": "^4.23.11"
   },
   "devDependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
     "jsonwebtoken": "^9.0.3",
     "prisma": "^7.10.0",
     "zod": "^4.5.4"

@@ -93,7 +93,7 @@ export async function searchingProducts(data) {
     })
 
     } catch (error) {
-    globalErorHandling(error)        
+    throw error;       
     }
 }
 
@@ -123,7 +123,7 @@ export async function addCart(item,user) {
     return cartInsert;
 })
     } catch (error) {
-  globalErorHandling(error)      
+  throw error;     
     }
 }
 
@@ -135,7 +135,7 @@ export async function deletingProduct(id) {
         }
     })
     } catch (error) {
-      globalErorHandling(error)  
+      throw error; 
     }
 }
 
@@ -150,7 +150,7 @@ export async function addStockCart(id,quantity) {
         }
     })
    } catch (error) {
-    globalErorHandling(error)
+   throw error;
    }
 }
 
@@ -191,6 +191,6 @@ export async function filteringData(category,price,size) {
     return await prisma.product.findMany({where})
 
     } catch (error) {
-    globalErorHandling(error)        
+   throw error;        
     }
 }
