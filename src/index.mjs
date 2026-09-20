@@ -1,5 +1,6 @@
 import "express-async-error";
 import express from "express";
+import cookieParser from "cookie-parser";
 import  route  from "./routes.mjs";
 import { globalErorHandling } from "./midleware.mjs";
 
@@ -12,6 +13,9 @@ app.use("/", (req, res, next) => {
 });
 
 app.use("/", route);
+app.use(cookieParser());
+const tokenBlacklist = new Set();
+
 app.use(globalErorHandling);
 
 

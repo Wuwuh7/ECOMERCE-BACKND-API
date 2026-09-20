@@ -49,7 +49,7 @@ export const ownershipChecker = async (req,res,next) => {
    const cartId = req.params.cartId;
 
    if(cartId) {
-      const cart = await    findCartId(cartId);
+      const cart = await findCartId(cartId);
 
       if (!cart) {
                 return res.status(404).json({ message: "Cart gak ditemukan!" });
@@ -86,3 +86,5 @@ export const globalErorHandling = async (err,req,res,next) => {
     details: err.details || null,
   });
 };
+
+

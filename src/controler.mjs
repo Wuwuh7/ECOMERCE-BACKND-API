@@ -1,6 +1,8 @@
+import "dotenv/config"
 import z from "zod"
 import { detailingProduct,searchingProducts,addCart,deletingProduct,addStockCart,filteringData } from "./service.mjs"
 import { createToken,verifyJWT } from "./auth.mjs";
+import strict from "node:assert/strict";
 
 let dataHelper = (query) => {
         const {name,category,price,size} = query;
@@ -83,7 +85,13 @@ export const controlerAuth = async (req,res) => {
     try {
         let serialObj = req.body;
         const resultAuth = await createToken(serialObj)
-        res.json({
+        res.cookie('jwt_token',resultAuth, {
+            httpOnly:true,
+            secure: process.env.Node_ENV === "production",
+            sameSite: "strict",
+            maxAge:3600000
+        })
+       return res.status(200).json({
             status:"verifikasi dadi",
             result:resultAuth
         })

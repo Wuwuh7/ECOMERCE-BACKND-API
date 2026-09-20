@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import _ from 'lodash';
+import cookieParser from "cookie-parser";
 
 const keyToken = process.env.JWT_SECRET;
 

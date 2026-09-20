@@ -21,6 +21,7 @@
   "dependencies": {
     "@prisma/client": "^7.10.0",
     "7.10": "^1.0.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-async-error": "0.0.2",
