@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import cookieParser from "cookie-parser";
+import  _  from 'lodash'
+import {tokenBlacklist} from "./blacklist.mjs"
 
 const keyToken = process.env.JWT_SECRET;
 
@@ -41,4 +42,8 @@ export async function createToken(data) {
         algorithm: 'HS256'
     });
     return token;
+}
+
+export async function logoutSession(cookie) {  
+    return tokenBlacklist.add(cookie);
 }

@@ -14,8 +14,6 @@ app.use("/", (req, res, next) => {
 
 app.use("/", route);
 app.use(cookieParser());
-const tokenBlacklist = new Set();
-
 app.use(globalErorHandling);
 
 

@@ -1,8 +1,7 @@
 import "dotenv/config"
 import z from "zod"
-import { detailingProduct,searchingProducts,addCart,deletingProduct,addStockCart,filteringData } from "./service.mjs"
+import { detailingProduct,searchingProducts,addCart,deletingProduct,addStockCart,filteringData, logoutSession } from "./service.mjs"
 import { createToken,verifyJWT } from "./auth.mjs";
-import strict from "node:assert/strict";
 
 let dataHelper = (query) => {
         const {name,category,price,size} = query;
@@ -109,4 +108,17 @@ export const controlerVerifyToken = async (req,res) => {
         status: "suksess lur",
         result:resultVerifyToken
     }) 
+}
+
+export const controlerLogout = async (req,res) => {
+   try {
+    let cookiesValue = req.cookies.jwt_token;
+    const resultLogout = await logoutSession(cookiesValue);
+    res.json({
+        status: "josjis lur",
+        result: resultLogout
+    })
+   } catch (error) {
+     return res.status(500).json({ status: "error", message: error.message }); 
+   }
 }
