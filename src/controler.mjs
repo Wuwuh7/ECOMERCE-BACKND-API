@@ -114,8 +114,9 @@ export const controlerLogout = async (req,res) => {
    try {
     let cookiesValue = req.cookies.jwt_token;
     const resultLogout = await logoutSession(cookiesValue);
+    res.clearCookie(jwt_token);
     res.json({
-        status: "josjis lur",
+        status: "cookie telah logout",
         result: resultLogout
     })
    } catch (error) {

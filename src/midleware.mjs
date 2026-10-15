@@ -1,6 +1,8 @@
 import { userDb,findCartId,AppErors } from "./service.mjs";
 import basicAuth from "express-basic-auth";
 import { verifyJWT } from "./auth.mjs";
+import { tokenBlacklist } from "./blacklist.mjs";
+// import { TokenExpiredError } from "jsonwebtoken";
 
  const authentication = basicAuth({
  authorizer: async (email,password,cb) => {
@@ -30,12 +32,17 @@ export async function checkAuth(req,res,next) {
 }
 
 export const validationToken = async (req,res,next) => {
-   const token = req.headers.authorization?.split(" ")[1];
+   // const token = req.headers.authorization?.split(" ")[1];
+   const token = req.cookies?.jwt_token;
    if (!token) {
             return res.status(401).json({ message: "Token gak ada, lur!" });
         }
+   if (tokenBlacklist.has(token)) {
+      
+     throw new AppErors("Token masuk blacklist", 403)  
+   }
    const validation = await verifyJWT(token);
-
+   
    if(!validation?.payload?.userId) {
       return res.status(401).json({message:"payload rusak"});
    }

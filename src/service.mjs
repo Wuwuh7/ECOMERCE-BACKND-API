@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import { globalErorHandling } from "./midleware.mjs";
-// import { tokenBlacklist } from "./blacklist.mjs";
+import { tokenBlacklist } from "./blacklist.mjs";
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -195,3 +195,13 @@ export async function filteringData(category,price,size) {
    throw error;        
     }
 }
+
+export const logoutSession = async (cookiesValue) => {
+   try {
+     if(cookiesValue) {
+       tokenBlacklist.add(cookiesValue);
+    }
+   } catch (error) {
+    throw(error)
+   }
+};
