@@ -1,0 +1,16 @@
+GET https://automatic-goldfish-qv6pxw5w5wjp39q46-8080.app.github.dev/filter?category=sport
+Accept: application/json
+
+###
+
+POST https://automatic-goldfish-qv6pxw5w5wjp39q46-8080.app.github.dev/auth
+Authorization: Basic d3doNzY2X2pvc0BnbWFpbC5jb206YmlqaWt1NQ==
+Content-Type: application/json
+
+{
+    "userId":"2"
+}
+
+###
+GET https://automatic-goldfish-qv6pxw5w5wjp39q46-8080.app.github.dev/product/2
+
